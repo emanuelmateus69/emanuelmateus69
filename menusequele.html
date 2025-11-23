@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cardápio Digital</title>
+
+  <style>
+    :root {
+      --bg: #fef2de;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #417057;
+      --radius: 10px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* categorias */
+    .categories {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .cat-btn {
+      border: 1px solid #ddd;
+      background: var(--card);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .cat-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: transparent;
+    }
+
+    /* itens */
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 15px;
+    }
+
+    .item {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 15px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .item h3 {
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .item p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 15px; }
+      header h1 { font-size: 24px; }
+      .menu { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+  <img src="logo.png" style="width: 200px;">
+  <br>
+    <h1>Menu</h1>
+  </br>
+
+    <p>Aberto todos os dias · Entregas em Luanda</p>
+  </header>
+
+  <div class="categories">
+    <button class="cat-btn active" data-cat="all">Todos</button>
+    <button class="cat-btn" data-cat="pratos">Pratos</button>
+    <button class="cat-btn" data-cat="grelhados">Grelhados</button>
+    <button class="cat-btn" data-cat="bebidas">Bebidas</button>
+    <button class="cat-btn" data-cat="doses">Doses</button>
+  </div>
+
+  <section class="menu" id="menu"></section>
+
+  <script>
+    const menu = [
+      { name: "Bitoque", desc: "Arroz, Salada, Frango", price: "6.500kz", cat: "pratos" },
+      { name: "Peito de frango", desc: "com Arroz de Cenoura, batata frita, salada e feijão", price: "6.500kz", cat: "pratos" },
+      { name: "Arroz com churrasco", desc: "com batata e salada)", price: "6.000kz", cat: "pratos" },
+      { name: "Cozido de bacalhau", desc: "com bacalhau, batatas, e cenouras", price: "8.500kz", cat: "pratos" },
+      { name: "Mufete de peixe chopa", desc: "com Peixe, feijão de óleo de palma e acompanhamentos clássicos", price: "10.000kz", cat: "pratos" },
+      { name: "Mufete de peixe carapau", desc: "com Peixe, feijão de óleo de palma e acompanhamentos clássicos", price: "6.000kz", cat: "pratos" },
+      { name: "Filete de peito de frango", desc: "com arroz,salada, feijão preto, batata frita", price: "7.000kz", cat: "pratos" },
+      { name: "Funge de peito Alto", desc: "com feijão, de óleo de palma", price: "6.500kz", cat: "pratos" },
+      { name: "Funge de Miudesas", desc: "funge e miudesas", price: "6.000kz", cat: "pratos" },
+      { name: "Funge de Carne Seca", desc: "com feijão", price: "7.000kz", cat: "pratos" },
+      { name: "Funge de Calulu de Peixe", desc: "com feijão", price: "6.000kz", cat: "pratos" },
+      { name: "Funge com peixe frito", desc: "com kizaca", price: "5.000kz", cat: "pratos" },
+      { name: "Funge com muteta", desc: "de carne seca", price: "7.000kz", cat: "pratos" },
+      { name: "Peixe Frito", desc: "com molho escabeche", price: "5.000kz", cat: "pratos" },
+      { name: "Camarão com pão", desc: "com molho", price: "6.500kz", cat: "pratos" },
+      //Grelhados
+      { name: "Meio Frango", desc: "grelhado na brasa", price: "4.500kz", cat: "grelhados"},
+      { name: "Frango Inteiro", desc: "grelhado na brasa", price: "9.000kz", cat: "grelhados" },
+      { name: "Pincho", desc: "grelhado na brasa", price: "1.500kz", cat: "grelhados" },
+      { name: "Pincho", desc: "ao carvão", price: "1.500kz", cat: "grelhados" },
+      { name: "Chouriço a cabeloas", desc: "com pão", price: "5.500kz", cat: "grelhados" },
+      { name: "Dobradinha", desc: "tradicional", price: "5.000kz", cat: "grelhados" },
+      { name: "Makayabo", desc: "tradicional", price: "2.000kz", cat: "grelhados" },
+      { name: "Kikuanga", desc: "tradicional", price: "1.000kz", cat: "grelhados" },
+      { name: "Asinha Panada", desc: "com batata e molho da casa", price: "6.000kz", cat: "grelhados" },
+      //Doses
+      { name: "Batata Frita", desc: "à moda", price: "1.500kz", cat: "doses" },
+      { name: "Salada", desc: "salada do chef", price: "1.500kz", cat: "doses" },
+      { name: "banana pão", desc: "dourada", price: "1.500kz", cat: "doses" },
+      { name: "Catato", desc: "sabor tradicional", price: "2.000kz", cat: "doses" },
+      { name: "Fumbua", desc: "verde tradicional", price: "2.000kz", cat: "doses" },
+      { name: "Feijão", desc: "feijão à escolha", price: "1.500kz", cat: "doses" },
+      { name: "Kizaca", desc: "verde tradicional", price: "1.500kz", cat: "doses" },
+      //Bebidas
+      { name: "Café", desc: "xícara", price: "1.500kz", cat: "bebidas" },
+      { name: "Água Orion", desc: "60cl", price: "350kz", cat: "bebidas" },
+      { name: "Água Orion", desc: "40cl", price: "350kz", cat: "bebidas" },
+      { name: "Sumo natural", desc: "Copo", price: "2.500kz", cat: "bebidas" },
+      { name: "Compal em Lata", desc: "33cl", price: "1.000kz", cat: "bebidas" },
+      { name: "Compal Pacote", desc: "750ml", price: "3.500kz", cat: "bebidas" },
+      { name: "7 Up Garrafa", desc: "270ml", price: "400kz", cat: "bebidas" },
+      { name: "Top Cola", desc: "30cl", price: "400kz", cat: "bebidas" },
+      { name: "Pepsi cola", desc: "270ml", price: "1.000kz", cat: "bebidas" },
+      { name: "Mirinda", desc: "30cl", price: "400kz", cat: "bebidas" },
+      { name: "Coca cola em Garrafa", desc: "30cl", price: "500kz", cat: "bebidas" },
+      { name: "Sprite em Garrafa", desc: "30cl", price: "500kz", cat: "bebidas" },
+      { name: "Sagiko", desc: "320ml", price: "500kz", cat: "bebidas" },
+      { name: "Fino Canecão", desc: "500ml", price: "1.250kz", cat: "bebidas" },
+      { name: "Fino Caneca", desc: "300", price: "1.000kz", cat: "bebidas" },
+      { name: "Fino Copo", desc: "150ml", price: "500kz", cat: "bebidas" },
+      { name: "Smirnoff Lata", desc: "33cl", price: "1.500kz", cat: "bebidas" },
+      { name: "Doppel Garrafa", desc: "31cl", price: "500kz", cat: "bebidas" },
+      { name: "Savana Garrafa", desc: "250ml", price: "1.500kz", cat: "bebidas" },
+      { name: "Booster Garrafa", desc: "250ml", price: "500kz", cat: "bebidas" },
+      { name: "Booster Lata", desc: "330ml", price: "1.000kz", cat: "bebidas" },
+      { name: "Cuca Lata", desc: "330ml", price: "1.000kz", cat: "bebidas" },
+      { name: "SuperBock Mini Garrafa", desc: "250ml", price: "1.000kz", cat: "bebidas" },
+      { name: "Cuca Garrafa", desc: "310ml", price: "500kz", cat: "bebidas" },
+      { name: "Nocal Garrafa", desc: "310ml", price: "500kz", cat: "bebidas" },
+      { name: "Água Tónica Lata", desc: "310ml", price: "1.00kz", cat: "bebidas" },
+      { name: "Speed Energy Drink", desc: "330ml", price: "1.000kz", cat: "bebidas" },
+      { name: "Vinho Tinto Pacote", desc: "1 Litro", price: "3.500kz", cat: "bebidas" },
+      { name: "Vinho Sangria Tropicana", desc: "1 Litro", price: "3.500kz", cat: "bebidas" },
+      { name: "Gin Gordon Lata", desc: "330ml", price: "1.500kz", cat: "bebidas" },
+      { name: "Vinho Alandra", desc: "750ml", price: "10.000kz", cat: "bebidas" },
+      { name: "Vinho Tinto Porca de Murça", desc: "750ml", price: "14.000kz", cat: "bebidas" },
+      { name: "Vodka", desc: "750ml", price: "6.000kz", cat: "bebidas" },
+      { name: "Whisky Red Label", desc: "750ml", price: "25.000kz", cat: "bebidas" },
+      { name: "Amarula", desc: "750ml", price: "22.000kz", cat: "bebidas" },
+      { name: "Vodka Escpae", desc: "375ml", price: "5.000kz", cat: "bebidas" },
+      { name: "Whisky Johnnie Walker (Black Label)", desc: "750ml", price: "38.000kz", cat: "bebidas" },
+      { name: "Whisky JB", desc: "750ml", price: "23.000kz", cat: "bebidas" },
+      { name: "Whisky White Horse", desc: "750ml", price: "10.000kz", cat: "bebidas" },
+      { name: "Gin Gordon em Garrafa", desc: "750ml", price: "12.000kz", cat: "bebidas" },
+      { name: "Vinho JP AZEITÃO", desc: "750ml", price: "10.000kz", cat: "bebidas" },
+      { name: "Vinho Tinto Alabastro", desc: "750ml", price: "10.000kz", cat: "bebidas" },
+      { name: "Vinho MONTE VELHO", desc: "750ml", price: "12.000kz", cat: "bebidas" },
+      { name: "Champanhe JC LE ROUX", desc: "750ml", price: "14.000kz", cat: "bebidas" },
+      { name: "Vinho Branco Gazela", desc: "750ml", price: "12.000kz", cat: "bebidas" },
+      { name: "Vinho Tinto Porto Armada", desc: "750ml", price: "16.000kz", cat: "bebidas" },
+      { name: "Vinho Tinto Esteva", desc: "750ml", price: "26.000kz", cat: "bebidas" },
+      { name: "Vinho Tinto Marquês de Borba", desc: "750ml", price: "16.000kz", cat: "bebidas" },
+      { name: "Vinho Tinto Terra da Chela", desc: "750ml", price: "8.000kz", cat: "bebidas" },
+      { name: "Whisky JAMESON", desc: "700ml", price: "26.000kz", cat: "bebidas" },
+      { name: "Vinho Barril Taça", desc: "700ml", price: "1.250kz", cat: "bebidas" },
+      { name: "Vinho Barril Jarra", desc: "1 Litro", price: "6.000kz", cat: "bebidas" }
+    ];
+
+    const menuContainer = document.getElementById('menu');
+    const buttons = document.querySelectorAll('.cat-btn');
+
+    function render(category) {
+      menuContainer.innerHTML = '';
+      const filtered = category === 'all' ? menu : menu.filter(i => i.cat === category);
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <h3>${item.name} <span class="price">${item.price}</span></h3>
+          <p>${item.desc}</p>
+        `;
+        menuContainer.appendChild(div);
+      });
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        render(btn.dataset.cat);
+      });
+    });
+
+    
+    render('all');
+  </script>
+
+  <button id="but">Whatsapp</button>
+
+
+</body>
+
+
+
+
+</html>
